@@ -1,0 +1,10 @@
+*.tfstate
+*.tfvars
+*.tfstate.backup
+*.terraform*
+.terraform/
+test.txt
+gwin-chart
+prepare.json
+secret.txt
+.DS_Store

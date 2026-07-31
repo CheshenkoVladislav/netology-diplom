@@ -1,0 +1,60 @@
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: Gateway
+# metadata:
+#   name: monitoring-gateway
+#   namespace: monitoring
+#   annotations:
+#     gwin.yandex.cloud/subnets: "e9b1mk3d4elkjg7t2nu0,fl8mlo9t08257am189ks,e2lsgllm3jmr89nsm1i7"
+#     gwin.yandex.cloud/securityGroups: enpopes8vm29km6a3akh
+# spec:
+#   gatewayClassName: gwin-default
+#   listeners:
+#     - name: http
+#       protocol: HTTP
+#       port: 3000
+#       allowedRoutes:
+#         namespaces:
+#           from: All
+#   addresses:
+#     - type: gwin.yandex.cloud/autoIPv4
+#       value: auto
+# ---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: HTTPRoute
+# metadata:
+#   name: monitoring-gateway
+#   namespace: monitoring
+# spec:
+#   parentRefs:
+#     - name: monitoring-gateway
+#       sectionName: http
+#   rules:
+#     - matches:
+#         - path:
+#             value: /
+#             type: PathPrefix
+#       backendRefs:
+#         - kind: Service
+#           name: grafana
+#           port: 3000
+
+# # ---
+# # apiVersion: gateway.networking.k8s.io/v1
+# # kind: HTTPRoute
+# # metadata:
+# #   name: grafana-httproute
+# #   namespace: monitoring
+# # spec:
+# #   parentRefs:
+# #     - name: example-gateway
+# #       sectionName: http-grafana
+# #   rules:
+# #     - matches:
+# #         - path:
+# #             value: /
+# #             type: PathPrefix
+# #           method: GET
+# #       backendRefs:
+# #         - kind: Service
+# #           name: grafana
+# #           port: 3000

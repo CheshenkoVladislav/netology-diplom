@@ -25,3 +25,8 @@ provider "yandex" {
   folder_id                = var.folder_id
   service_account_key_file = "prepare.json"
 }
+
+variable "test_var" {
+  description = "test variable"
+  type        = string
+}

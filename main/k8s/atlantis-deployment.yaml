@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atlantis
+  labels:
+    app: atlantis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: atlantis
+  template:
+    metadata:
+      labels:
+        app: atlantis
+    spec:
+      containers:
+      - name: atlantis
+        image: runatlantis/atlantis:v0.17.0
+        ports:
+        - containerPort: 4141
+        env:
+          - name: ATLANTIS_ATLANTIS_URL
+            value: "http://localhost:4141/atlantis"
+          - name: ATLANTIS_REPO_ALLOWLIST
+            value: github.com/CheshenkoVladislav/netology-diplom.git # 1. Replace <YOUR_GITHUB_USERNAME>/<YOUR_REPOSITORY> with your GitHub username and repository name.
+          - name: ATLANTIS_GH_USER
+            value: CheshenkoVladislav # 4i. If you're using Gitea replace <YOUR_GITEA_USER> with the username of your Atlantis Gitea user without the `@`.
+          - name: ATLANTIS_GH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: atlantis-vcs
+                key: token
+          - name: ATLANTIS_GH_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: atlantis-vcs
+                key: webhook-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: atlantis-service
+spec:
+  selector:
+    app: atlantis
+  ports:
+    - protocol: TCP
+      port: 4141
+      targetPort: 4141
+      nodePort: 30003
+  type: NodePort

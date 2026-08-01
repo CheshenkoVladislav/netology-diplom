@@ -1,0 +1,15 @@
+version: 3
+projects:
+  - name: main
+    dir: main
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars"]
+      enabled: true
+
+  - name: prepare
+    dir: prepare
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars"]
+      enabled: true

@@ -8,3 +8,4 @@ gwin-chart
 prepare.json
 secret.txt
 .DS_Store
+secrets.yaml

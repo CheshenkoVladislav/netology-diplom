@@ -1,0 +1,16 @@
+#cloud-config
+users:
+  - name: adminuser
+    groups: sudo
+    shell: /bin/bash
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOz2Y3IQfDFB3LG/PmTSEakUrI4rVE4dm93im1wXwss vladislav.konstantinowich@yandex.ru
+ssh_pwauth: false
+# Отключаем вопросы при первом входе
+disable_root: true
+
+# sudo apt install python3-pip
+# sudo apt update
+# sudo apt install ansible -y

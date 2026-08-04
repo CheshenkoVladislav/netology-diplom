@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-ingress
+  namespace: monitoring
+  annotations:
+    # `groupName` is required.
+    gwin.yandex.cloud/groupName: "my-ingress-group" # group multiple ingresses to single Balancer
+    gwin.yandex.cloud/externalIPv4Address: "auto" # external IPv4 address
+    # Healthcheck
+    gwin.yandex.cloud/rules.backends.hc.timeout: "5s" # health check timeout
+    gwin.yandex.cloud/rules.backends.hc.interval: "15s" # check interval
+    gwin.yandex.cloud/rules.backends.hc.healthyThreshold: "1" # checks to mark healthy
+    gwin.yandex.cloud/rules.backends.hc.unhealthyThreshold: "5" # checks to mark unhealthy
+    gwin.yandex.cloud/rules.backends.hc.port: "30002" # health check port
+    gwin.yandex.cloud/rules.backends.hc.http.path:
+      "/grafana/api/health"
+      # HTTP health check path
+spec:
+  ingressClassName: gwin-default # use Gwin ingress class
+  rules:
+    - http:
+        paths:
+          - path: "/grafana"
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000

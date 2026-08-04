@@ -33,15 +33,29 @@ resource "yandex_compute_instance" "agent-instance" {
   }
 }
 
+variable "private_key_path" {
+  description = "Path to the private key file"
+  type        = string
+}
+
 resource "local_file" "ansible-inventory" {
   filename = "ansible/prepare_playbook/inventory/agent.yml"
   content  = templatefile("${path.module}/templates/agent.yml.tpl", {
     host_ip = yandex_compute_instance.agent-instance.network_interface.0.nat_ip_address
+    private_key_path = var.private_key_path
+  })
+}
+
+resource "local_file" "ansible-playbook" {
+  filename = "ansible/prepare_playbook/prepare.yml"
+  content  = templatefile(abspath("${path.module}/templates/prepare.yml.tpl"), {
+    yc_folder_id                = var.folder_id
+    yc_cloud_id                 = var.cloud_id
   })
 }
 
 resource "null_resource" "ansible-provisioner" {
-  depends_on = [local_file.ansible-inventory, yandex_compute_instance.agent-instance]
+  depends_on = [local_file.ansible-inventory, local_file.ansible-playbook, yandex_compute_instance.agent-instance]
 
   provisioner "local-exec" {
     command = <<-EOT

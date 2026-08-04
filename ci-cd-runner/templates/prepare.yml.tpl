@@ -69,6 +69,19 @@
       ansible.builtin.command: yc --version
       environment:
         PATH: "{{ ansible_env.HOME }}/yandex-cloud/bin:{{ ansible_env.PATH }}"
+    
+    - name: Перенос ключа сервисного аккаунта в домашнюю директорию
+      ansible.builtin.copy:
+        src: ../../sa_key.json
+        dest: ~/sa_key.json
+        mode: '0600'
+    
+    - name: Установка конфигурации Yandex Cloud CLI
+      ansible.builtin.shell: |
+        export PATH=$HOME/yandex-cloud/bin:$PATH
+        yc config set service-account-key ~/sa_key.json
+        yc config set folder-id ${yc_folder_id}
+        yc config set cloud-id ${yc_cloud_id}
 
 - name: Установка kubectl
   hosts: deb
@@ -84,11 +97,13 @@
 
     - name: Установка kubectl config
       ansible.builtin.shell: |
-        echo "Установи kubectl config"
+        export PATH=$HOME/yandex-cloud/bin:$PATH
+        yc managed-kubernetes cluster get-credentials --id cat7t5cng9c5vatqigdr --external
     
-    # - name: Проверка кластера
-    #   ansible.builtin.shell: |
-    #     kubectl get nodes
+    - name: Проверка кластера
+      ansible.builtin.shell: |
+        kubectl get po
+        
 - name: Установка nodejs и npm
   hosts: deb
   become: true

@@ -4,7 +4,7 @@ metadata:
   name: my-app-ingress
   namespace: default
   annotations:
-    gwin.yandex.cloud/subnets: "e2lb6celpfc5q1vt20r7,e9bk0cn9tp7rcu1o7q71,fl8bf3b1ckq9peebvd73"  
+    gwin.yandex.cloud/subnets: "e2l7ckqrj0nc31pf80fd,fl8ao58hvklvhippqagk,e9b227lhvuvsvtnpjm10"  
     # `groupName` is required.
     gwin.yandex.cloud/groupName: "my-ingress-group" # group multiple ingresses to single Balancer
     gwin.yandex.cloud/externalIPv4Address: "auto" # external IPv4 address

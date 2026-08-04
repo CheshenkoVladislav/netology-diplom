@@ -18,10 +18,9 @@ terraform {
     skip_s3_checksum            = true # Необходимая опция при описании бэкенда для Terraform версии 1.6.3 и старше.
   }
 }
-
 provider "yandex" {
   zone                     = "ru-central1-a"
   cloud_id                 = var.cloud_id
   folder_id                = var.folder_id
-  service_account_key_file = "prepare.json"
+  service_account_key_file = var.service_account_key_path
 }
